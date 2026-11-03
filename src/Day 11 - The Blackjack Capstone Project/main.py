@@ -26,9 +26,12 @@ def calculateScore(hand):
     for card in hand:
         points += cardValue[cards.index(card)]
 
+        countAces = hand.count('A')
+
     #handling Ace    
-    while points > 21 and 'A' in hand:
+    while points > 21 and countAces > 0:
         points -= 10
+        countAces -= 1
 
     return points
 
@@ -38,10 +41,10 @@ while True:
     if weContinue == 'y':
         print("\033c", end="") #clears the screen
     elif weContinue == 'n':
-        game = False
         break
     else:
         print("Invalid input. Please enter 'y' or 'n'.")
+        continue
     print(art.logo)
     myHand = []
     compHand = []
