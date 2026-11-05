@@ -10,19 +10,21 @@ import random
 
 # Scenario 1: A Blackjack --> "Win with a Blackjack 😎"
 
-#Scenario 2: We bust --> 
+# Scenario 2: We bust --> "You went over. You lose 😭"
 
+# Scenario 3: Computer busts --> "Opponent went over. You win 😁"
+
+# Scenario 4: We draw --> "Draw 🙃"
+
+# Scenario 5: Higher score than opponent --> "You win 😃"
+
+# Scenario 6: Lower score than opponent --> "You lose 😤"
+
+# Scenario 7: Computer has a Blackjack --> "You lose, opponent has Blackjack 😱"
 
 game = True
 cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 cardValue = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-herHand = []
-
-# def dealCard(myHand):
-#     myHand.append(random.choice(cards))
-#     myHand.append(random.choice(cards))
-
-#     print(f"Your cards: {myHand}, current score: {calculateScore(myHand)}")
 
 def yesOrNo(prompt):
     while True:
@@ -50,7 +52,7 @@ def calculateScore(hand):
 
     return points
 
-# dealCard(herHand)
+
 while True:
     if yesOrNo("Do you want to play a game of Blackjack? Type 'y' or 'n': "):
         print("\033c", end="") #clears the screen
@@ -60,22 +62,71 @@ while True:
     myHand = []
     compHand = []
 
+    ourScore = 0
+    theirScore = 0
     mePlaying = True
     compPlaying = True
+
+    weAcing = False
+    weBusting = False
+    theyAcing = False
+    theyBusting = False
 
     myHand.append(random.choice(cards))
     myHand.append(random.choice(cards))
     ourScore = calculateScore(myHand)
     compHand.append(random.choice(cards))
+    compHand.append(random.choice(cards))
+    theirScore = calculateScore(compHand)
+
+    if ourScore == 21:
+        weAcing = True
+
+    if theirScore == 21:
+        theyAcing = True
 
     while mePlaying:
         print(f"Your cards: {myHand}, current score: {ourScore}")
         print(f"Computer's first card: {compHand}")
 
+        #Option 1
         if ourScore >= 21:
             mePlaying = False
+            if ourScore > 21:
+                weBusting = True
         else:
-            if yesOrNo(" Type 'y' to get another card, type 'n' to pass: "):
+            if yesOrNo("Type 'y' to get another card, type 'n' to pass: "):
                 myHand.append(random.choice(cards))
+                ourScore = calculateScore(myHand)
             else:
                 mePlaying = False
+
+        #Option 2
+        mePlaying = False
+        if ourScore < 21:
+            if yesOrNo("Type 'y' to get another card, type 'n' to pass: "):
+                mePlaying = True
+                myHand.append(random.choice(cards))
+                ourScore = calculateScore(myHand)
+        elif ourScore == 21:
+            weAcing = True
+        else:
+            weBusting = True
+
+    print(f"Your final hand: {myHand}, final score: {ourScore}")
+
+    while compPlaying:
+        compHand.append(random.choice(cards))
+        theirScore = calculateScore(compHand)
+
+        if theirScore >= 17:
+            compPlaying = False
+            if theirScore == 21:
+                theyAcing = True
+            elif theirScore > 21:
+                theyBusting = True
+
+
+    print(f"Computer's final hand: {compHand}, final score: {theirScore}")
+
+
