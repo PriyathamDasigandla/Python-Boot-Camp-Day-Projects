@@ -61,7 +61,6 @@ while True:
     print(art.logo)
     myHand = []
     compHand = []
-
     ourScore = 0
     theirScore = 0
     mePlaying = True
@@ -79,40 +78,31 @@ while True:
     compHand.append(random.choice(cards))
     theirScore = calculateScore(compHand)
 
-    if ourScore == 21:
-        weAcing = True
+    if ourScore == 21 or theirScore == 21:
+        mePlaying = False
+        compPlaying = False
+
+        if ourScore == 21:
+            weAcing = True
+        else:
+            theyAcing = True
 
     if theirScore == 21:
         theyAcing = True
+        compPlaying = False
 
     while mePlaying:
         print(f"Your cards: {myHand}, current score: {ourScore}")
-        print(f"Computer's first card: {compHand}")
+        print(f"Computer's first card: {compHand[0]}")
+        if ourScore >= 21 or not yesOrNo("Type 'y' to get another card, type 'n' to pass: "):
+            break
 
-        #Option 1
-        if ourScore >= 21:
-            mePlaying = False
-            if ourScore > 21:
-                weBusting = True
-        else:
-            if yesOrNo("Type 'y' to get another card, type 'n' to pass: "):
-                myHand.append(random.choice(cards))
-                ourScore = calculateScore(myHand)
-            else:
-                mePlaying = False
+        myHand.append(random.choice(cards))
+        ourScore = calculateScore(myHand)
 
-        #Option 2
-        mePlaying = False
-        if ourScore < 21:
-            if yesOrNo("Type 'y' to get another card, type 'n' to pass: "):
-                mePlaying = True
-                myHand.append(random.choice(cards))
-                ourScore = calculateScore(myHand)
-        elif ourScore == 21:
-            weAcing = True
-        else:
-            weBusting = True
-
+    if ourScore > 21:
+        weBusting = True
+        compPlaying = False
     print(f"Your final hand: {myHand}, final score: {ourScore}")
 
     while compPlaying:
@@ -120,13 +110,9 @@ while True:
         theirScore = calculateScore(compHand)
 
         if theirScore >= 17:
-            compPlaying = False
-            if theirScore == 21:
-                theyAcing = True
-            elif theirScore > 21:
-                theyBusting = True
+            break
 
-
+    theyBusting = theirScore > 21
     print(f"Computer's final hand: {compHand}, final score: {theirScore}")
 
-
+    
